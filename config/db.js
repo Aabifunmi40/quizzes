@@ -1,13 +1,19 @@
 const mongoose = require("mongoose");
 
-const connectTodb = async () => {
-    try {
-        let url =`mongodb://localhost:27017/${process.env.DB_NAME}`;
-        await mongoose.connect(url);
-        console.log("Connected to database")
-    } catch (err) {
-        console.log("An error occured while connecting",err)
-    }
+const connectToDb = async () => {
+  try {
+    const url = process.env.MONGO_URI || `mongodb://127.0.0.1:27017/${process.env.DB_NAME}`;
+
+    await mongoose.connect(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log("✅ Connected to MongoDB");
+  } catch (err) {
+    console.error("❌ An error occurred while connecting:", err.message);
+    process.exit(1);
+  }
 };
 
-module.exports = connectTodb
+module.exports = connectToDb;
