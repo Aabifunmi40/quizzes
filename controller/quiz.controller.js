@@ -9,7 +9,7 @@ const createQuiz = async (req, res) => {
       return res.status(400).json({ message: "Subject and questions are required" });
     }
 
-    // Transform options to match schema (text, isCorrect)
+    // Transform frontend data to match schema
     const numberedQuestions = questions.map((q, index) => ({
       number: index + 1,
       questionText: q.question,
@@ -79,7 +79,7 @@ const updateQuiz = async (req, res) => {
       return res.status(400).json({ message: "Subject and questions are required" });
     }
 
-    // Transform options to match schema
+    // Transform frontend data to match schema
     const numberedQuestions = questions.map((q, index) => ({
       number: index + 1,
       questionText: q.question,
