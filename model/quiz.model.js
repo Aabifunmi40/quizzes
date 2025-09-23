@@ -17,6 +17,7 @@ const quizSchema = new mongoose.Schema({
     enum: ["Mathematics", "English", "Current Affairs"], // you can add more later
     required: true
   },
+  number: { type: Number, required: true },
   questions: [questionSchema],
   createdAt: {
     type: Date,

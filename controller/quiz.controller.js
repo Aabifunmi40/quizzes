@@ -8,6 +8,12 @@ const createQuiz = async (req, res) => {
     if (!subject || !questions || questions.length === 0) {
       return res.status(400).json({ message: "Subject and questions are required" });
     }
+    // Assign question numbers based on array index
+    const numberedQuestions = questions.map((q, index) => ({
+      ...q,
+      number: index + 1,
+    }));
+
 
     const quiz = new QuizModel({ subject, questions });
     await quiz.save();
