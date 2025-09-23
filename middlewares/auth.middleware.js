@@ -1,36 +1,25 @@
-const jwt = require("jsonwebtoken");
-const UserModel = require("../model/user.model");
+const jwt = require('jsonwebtoken');
 
-// Verify JWT token
-const authMiddleware = async (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Expect "Bearer <token>"
-
-  if (!token) return res.status(401).json({ message: "No token provided" });
-
+const authMiddleware = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id, role, email }
+    req.user = decoded; // Attach user info to request
     next();
   } catch (error) {
-    return res.status(403).json({ message: "Invalid or expired token" });
+    console.error('Auth error:', error);
+    res.status(401).json({ message: 'Invalid token' });
   }
 };
 
-// Restrict access to admin only
-const isAdmin = async (req, res, next) => {
-  try {
-    const user = await UserModel.findById(req.user.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    if (user.role !== "admin") {
-      return res.status(403).json({ message: "Access denied, admin only" });
-    }
-
-    next();
-  } catch (error) {
-    return res.status(500).json({ message: "Server error", error: error.message });
+const isAdmin = (req, res, next) => {
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Admin access required' });
   }
+  next();
 };
 
 module.exports = { authMiddleware, isAdmin };

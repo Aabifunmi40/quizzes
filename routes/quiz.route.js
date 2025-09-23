@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const { createQuiz, getQuizzes, getQuizById, updateQuiz, deleteQuiz } = require("../controllers/quiz.controller");
 const { authMiddleware, isAdmin } = require("../middlewares/auth.middleware");
 
