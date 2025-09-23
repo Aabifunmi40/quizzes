@@ -1,6 +1,6 @@
 const express = require("express");
 const { authMiddleware, isAdmin } = require("../middlewares/auth.middleware");
-const { createQuiz, getQuizzes, getQuizById } = require("../controller/quiz.controller");
+const { createQuiz, getQuizzes, getQuizById,deleteQuiz } = require("../controller/quiz.controller");
 
 const router = express.Router();
 
@@ -12,5 +12,8 @@ router.get("/", getQuizzes);
 
 // Get a quiz by ID
 router.get("/:id", getQuizById);
+
+// delete quiz
+router.delete("/:id",authMiddleware,deleteQuiz)
 
 module.exports = router;
