@@ -2,16 +2,24 @@ const Profile = require("../model/profile.model");
 
 const getProfile = async (req, res) => {
   try {
-    const userId = req.user.id || req.user._id;
+    const userId = req.user?.id || req.user?._id;
 
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized: No user ID found" });
     }
 
-    const profile = await Profile.findOne({ userId });
+    let profile = await Profile.findOne({ userId });
 
+    // ✅ If no profile exists yet, return an empty object instead of 404
     if (!profile) {
-      return res.status(404).json({ message: "Profile not found" });
+      return res.json({
+        userId,
+        name: "",
+        email: "",
+        username: "",
+        bio: "",
+        profilePicture: "",
+      });
     }
 
     res.json(profile);
@@ -23,7 +31,7 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
-    const userId = req.user.id || req.user._id;
+    const userId = req.user?.id || req.user?._id;
 
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized: No user ID found" });
@@ -31,6 +39,7 @@ const updateProfile = async (req, res) => {
 
     const { name, email, username, bio, profilePicture } = req.body;
 
+    // ✅ Create or update profile (upsert)
     const profile = await Profile.findOneAndUpdate(
       { userId },
       { name, email, username, bio, profilePicture },
