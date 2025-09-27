@@ -29,11 +29,11 @@ const updateProfile = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized: No user ID found" });
     }
 
-    const { username, bio, profilePicture } = req.body;
+    const { name, email, username, bio, profilePicture } = req.body;
 
     const profile = await Profile.findOneAndUpdate(
       { userId },
-      { username, bio, profilePicture },
+      { name, email, username, bio, profilePicture },
       { new: true, upsert: true }
     );
 

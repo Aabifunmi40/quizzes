@@ -8,6 +8,8 @@ const profileSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    name: { type: String, default: "" },      // ✅ Add this
+    email: { type: String, default: "" },     // ✅ Add this
     username: { type: String, default: "" },
     bio: { type: String, default: "" },
     profilePicture: { type: String, default: "" },
