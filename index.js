@@ -3,6 +3,7 @@ const connectToDb = require("./config/db");
 const userRouter = require("./routes/user.route");
 const quizRouter = require("./routes/quiz.route");
 const resultRouter = require("./routes/result.route");
+const profileRouter=require("./routes/profile.route")
 require("dotenv").config();
 const cors = require("cors");
 
@@ -19,6 +20,7 @@ connectToDb();
 app.use("/api/user", userRouter);   // Auth (signup/login)
 app.use("/api/quiz", quizRouter);   // Quiz routes
 app.use("/api/result", resultRouter); // Result routes
+app.use("/api/profile", profileRouter)
 
 // Default route
 app.get("/", (req, res) => {
