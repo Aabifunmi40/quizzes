@@ -2,15 +2,20 @@ const ProfileModel = require("../model/profile.model");
 
 const getMyProfile = async (req, res) => {
   try {
+    // Use req.user.id from the auth middleware
     const profile = await ProfileModel.findOne({ user: req.user.id });
+
     if (!profile) {
       return res.status(404).json({ message: "Profile not found" });
     }
+
     res.json(profile);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 const updateMyProfile = async (req, res) => {
   try {
@@ -25,8 +30,10 @@ const updateMyProfile = async (req, res) => {
     }
     res.json({ message: "Profile updated", profile });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 module.exports = { getMyProfile, updateMyProfile };

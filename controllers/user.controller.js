@@ -33,7 +33,23 @@ const Signup = async (req, res) => {
       email,
     });
 
-    return res.status(201).json({ message: "User and profile created" });
+    const token = jwt.sign(
+  { id: newUser._id, role: newUser.role },
+  process.env.JWT_SECRET || "your_secret_key",
+  { expiresIn: "1h" }
+);
+
+return res.status(201).json({
+  message: "User and profile created",
+  token,
+  user: {
+    id: newUser._id,
+    name: newUser.name,
+    email: newUser.email,
+    role: newUser.role,
+  },
+});
+
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: err.message });
