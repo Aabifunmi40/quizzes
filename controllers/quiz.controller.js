@@ -115,5 +115,49 @@ const deleteQuiz = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+const deleteSingleQuestion = async (req, res) => {
+  try {
+    const { quizId, questionId } = req.params;
 
-module.exports = { createQuiz, getQuizzes, getQuizById, updateQuiz, deleteQuiz };
+    const quiz = await QuizModel.findById(quizId);
+    if (!quiz) return res.status(404).json({ message: "Quiz not found" });
+
+    quiz.questions = quiz.questions.filter(
+      (q) => q._id.toString() !== questionId
+    );
+
+    await quiz.save();
+    res.status(200).json({ message: "Question deleted successfully", quiz });
+  } catch (error) {
+    console.error("Error deleting question:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// ✅ Update a single question inside a quiz
+const updateSingleQuestion = async (req, res) => {
+  try {
+    const { quizId, questionId } = req.params;
+    const { number, questionText, options } = req.body;
+
+    const quiz = await QuizModel.findById(quizId);
+    if (!quiz) return res.status(404).json({ message: "Quiz not found" });
+
+    const question = quiz.questions.id(questionId);
+    if (!question) return res.status(404).json({ message: "Question not found" });
+
+    question.number = number || question.number;
+    question.questionText = questionText || question.questionText;
+    question.options = options || question.options;
+
+    await quiz.save();
+    res.status(200).json({ message: "Question updated successfully", quiz });
+  } catch (error) {
+    console.error("Error updating question:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+
+module.exports = { createQuiz, getQuizzes, getQuizById, updateQuiz, deleteQuiz , updateSingleQuestion, deleteSingleQuestion};
