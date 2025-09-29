@@ -1,8 +1,8 @@
 const UserModel = require("../model/user.model");
+const ProfileModel =require("../model/profile.model")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// Signup (register)
 const Signup = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -25,12 +25,21 @@ const Signup = async (req, res) => {
     });
 
     await newUser.save();
-    return res.status(201).json({ message: "A new user has been added" });
+
+    // ✅ Create profile automatically
+    await ProfileModel.create({
+      user: newUser._id,
+      name,
+      email,
+    });
+
+    return res.status(201).json({ message: "User and profile created" });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: err.message });
   }
 };
+
 
 // Signin (login)
 const signIn = async (req, res) => {
